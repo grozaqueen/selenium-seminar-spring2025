@@ -1,0 +1,5 @@
+BASE_URL=https://education.vk.company
+LOGIN_URL=https://education.vk.company/?#auth
+FEED_URL=https://education.vk.company/feed/
+VALID_EMAIL=test@example.com
+VALID_PASSWORD=TestPassword123

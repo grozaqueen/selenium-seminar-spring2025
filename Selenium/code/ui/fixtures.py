@@ -7,34 +7,18 @@ from ui.pages.base_page import BasePage
 from ui.pages.main_page import MainPage
 
 
-@pytest.fixture()
-def driver(config):
-    browser = config['browser']
-    url = config['url']
-    selenoid = config['selenoid']
-    vnc = config['vnc']
-    options = Options()
-    if selenoid:
-        capabilities = {
-            'browserName': 'chrome',
-            'version': '118.0',
-        }
-        if vnc:
-            capabilities['enableVNC'] = True
-        driver = webdriver.Remote(
-            'http://127.0.0.1:4444/wd/hub',
-            options=options,
-            desired_capabilities=capabilities
-        )
-    elif browser == 'chrome':
-        driver = webdriver.Chrome(executable_path=ChromeDriverManager().install())
-    elif browser == 'firefox':
-        driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
-    else:
-        raise RuntimeError(f'Unsupported browser: "{browser}"')
-    driver.get(url)
-    driver.maximize_window()
+import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
+@pytest.fixture(scope='function')
+def driver():
+    service = Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service)
+    print("Запуск браузера")
     yield driver
+    print("Закрытие браузера")
     driver.quit()
 
 
